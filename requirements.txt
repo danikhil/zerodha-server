@@ -18,3 +18,4 @@ urllib3==1.26.4
 uuid==1.30
 django-heroku==0.3.1
 psycopg2==2.8.6
+gunicorn
