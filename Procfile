@@ -1,0 +1,1 @@
+web: gunicorn zerodha_server.wsgi
