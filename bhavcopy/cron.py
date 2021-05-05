@@ -24,7 +24,7 @@ async def store_in_db(key, columns, record, redis):
 
 async def read_files_and_store(directory: str):
    files = os.listdir(directory)
-   redis = await aioredis.create_redis(redis_host, username = redis_username, password=redis_password)
+   redis = await aioredis.create_redis(redis_host, 16872, password=redis_password)
    for file in files:
       with open(os.path.join(directory, file), newline='\n') as csvfile:
          reader = csv.reader(csvfile)
