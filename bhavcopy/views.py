@@ -19,7 +19,7 @@ def index(request):
 @require_http_methods(["GET"])
 @async_to_sync
 async def search_name(request):
-   redis = await aioredis.create_redis((redis_host, redis_port), password=redis_password)
+   redis = await aioredis.create_redis(address=redis_host, password=redis_password, db=0)
    query = request.GET['query']
    results = await redis.scan(0, match= '*' + query + '*', count=1000)
    _, results = results
@@ -30,7 +30,7 @@ async def search_name(request):
 @require_http_methods(["GET"])
 @async_to_sync
 async def search(request):
-   redis = await aioredis.create_redis((redis_host, redis_port), password=redis_password)
+   redis = await aioredis.create_redis(address=redis_host, password=redis_password, db=0)
    name = request.GET['query']
    length = await redis.llen(name)
    indices = await redis.lrange(name, 0, length)

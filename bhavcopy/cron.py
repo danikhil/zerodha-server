@@ -7,25 +7,26 @@ import os, shutil
 import aioredis, asyncio
 import csv
 from itertools import chain
+import datetime
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
-redis_host = os.getenv("REDIS_HOST")
+redis_host = str(os.getenv("REDIS_HOST"))
 redis_username = os.getenv("REDIS_USERNAME")
 redis_password = os.getenv("REDIS_PASSWORD")
 redis_port = os.getenv("REDIS_PORT")
 
 #key is name in record and value is index
-async def store_in_db(key, value, redis):
+async def store_in_db0(key, value, redis):
    await redis.lpush(key.strip(), value.strip())
 
 #key is sc_code
-async def store_in_db(key, columns, record, redis):
+async def store_in_db1(key, columns, record, redis):
    pairs = list(chain.from_iterable([columns[i].strip(), record[i].strip()] for i in range(len(record))))
    await redis.hmset(key.strip(), *pairs)
 
 async def read_files_and_store(directory: str):
    files = os.listdir(directory)
-   redis = await aioredis.create_redis((redis_host, redis_port), password=redis_password)
+   redis = await aioredis.create_redis(address=redis_host, password=redis_password, db=0)
    for file in files:
       with open(os.path.join(directory, file), newline='\n') as csvfile:
          reader = csv.reader(csvfile)
@@ -33,14 +34,16 @@ async def read_files_and_store(directory: str):
          if(columns == None):
             continue
          for row in reader:
-            await store_in_db(row[1], row[0], redis)
-            await store_in_db(row[0], columns, row, redis)
+            await store_in_db0(row[1], row[0], redis)
+            await store_in_db1(row[0], columns, row, redis)
    redis.close()
    await redis.wait_closed()
 
 
 def fetch_equity():
-   url = 'https://www.bseindia.com/download/BhavCopy/Equity/EQ030521_CSV.ZIP'
+   date = datetime.datetime.now()
+   # url = 'https://www.bseindia.com/download/BhavCopy/Equity/EQ040521_CSV.ZIP'
+   url = 'https://www.bseindia.com/download/BhavCopy/Equity/EQ'+ date.strftime("04%m%y") +'_CSV.ZIP'
    try:
       response = requests.get(url=url, headers=headers)
       response.raise_for_status()
@@ -59,3 +62,6 @@ def fetch_equity():
 
 def fetch_bhavcopy():
    fetch_equity()
+
+if __name__ == "__main__":
+   fetch_bhavcopy() 
