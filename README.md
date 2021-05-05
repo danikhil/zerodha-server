@@ -5,22 +5,22 @@ pip install -r requirements.txt
 python manage.py runserver
 
 ### Redis
-You have get trial redis to run this serve
+You have get trial redis to run this server
 
 ### Hosting heroku
-heroku login
-heroku create
-git heroku push master:main
-heroku run python manage.py migrate
+heroku login <br />
+heroku create <br />
+git heroku push master:main <br />
+heroku run python manage.py migrate <br />
 
 ### Environment Variables
-In .env files write following variables
-REDIS_HOST=
-SECRET_KEY=
-FRONT_END=
-REDIS_PASSWORD=
-REDIS_USERNAME=
-REDIS_PORT=
+In .env files write following variables <br />
+REDIS_HOST= <br />
+SECRET_KEY= <br />
+FRONT_END= <br />
+REDIS_PASSWORD= <br />
+REDIS_USERNAME= <br />
+REDIS_PORT= <br />
 
 ### Web Frontend Reference
 https://github.com/danikhil/zerodha-web
