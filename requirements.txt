@@ -20,3 +20,5 @@ django-heroku==0.3.1
 psycopg2==2.8.6
 gunicorn
 python-dotenv==0.17.1
+DateTime==4.3
+zope.interface==5.4.0
