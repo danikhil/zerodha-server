@@ -7,7 +7,7 @@ import os, shutil
 import aioredis, asyncio
 import csv
 from itertools import chain
-import datetime
+from datetime import datetime, timedelta
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
 redis_host = str(os.getenv("REDIS_HOST"))
@@ -41,9 +41,8 @@ async def read_files_and_store(directory: str):
 
 
 def fetch_equity():
-   date = datetime.datetime.now()
-   # url = 'https://www.bseindia.com/download/BhavCopy/Equity/EQ040521_CSV.ZIP'
-   url = 'https://www.bseindia.com/download/BhavCopy/Equity/EQ'+ date.strftime("04%m%y") +'_CSV.ZIP'
+   date = datetime.today() - timedelta(days=1)
+   url = 'https://www.bseindia.com/download/BhavCopy/Equity/EQ'+ date.strftime("%d%m%y") +'_CSV.ZIP'
    try:
       response = requests.get(url=url, headers=headers)
       response.raise_for_status()
