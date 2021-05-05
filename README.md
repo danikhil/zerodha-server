@@ -8,19 +8,23 @@ python manage.py runserver
 You have get trial redis to run this server
 
 ### Hosting heroku
-heroku login <br />
-heroku create <br />
-git heroku push master:main <br />
-heroku run python manage.py migrate <br />
+```
+heroku login 
+heroku create 
+git heroku push master:main
+heroku run python manage.py migrate
+```
 
 ### Environment Variables
-In .env files write following variables <br />
-REDIS_HOST= <br />
-SECRET_KEY= <br />
-FRONT_END= <br />
-REDIS_PASSWORD= <br />
-REDIS_USERNAME= <br />
-REDIS_PORT= <br />
+In .env files write following variables
+```
+REDIS_HOST=
+SECRET_KEY=
+FRONT_END=
+REDIS_PASSWORD=
+REDIS_USERNAME=
+REDIS_PORT=
+```
 
 ### Web Frontend Reference
 https://github.com/danikhil/zerodha-web
