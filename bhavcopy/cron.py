@@ -12,6 +12,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36
 redis_host = os.getenv("REDIS_HOST")
 redis_username = os.getenv("REDIS_USERNAME")
 redis_password = os.getenv("REDIS_PASSWORD")
+redis_port = os.getenv("REDIS_PORT")
 
 #key is name in record and value is index
 async def store_in_db(key, value, redis):
@@ -24,7 +25,7 @@ async def store_in_db(key, columns, record, redis):
 
 async def read_files_and_store(directory: str):
    files = os.listdir(directory)
-   redis = await aioredis.create_redis(redis_host, 16872, password=redis_password)
+   redis = await aioredis.create_redis((redis_host, redis_port), password=redis_password)
    for file in files:
       with open(os.path.join(directory, file), newline='\n') as csvfile:
          reader = csv.reader(csvfile)

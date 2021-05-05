@@ -9,6 +9,7 @@ import os
 redis_host = os.getenv("REDIS_HOST")
 redis_username = os.getenv("REDIS_USERNAME")
 redis_password = os.getenv("REDIS_PASSWORD")
+redis_port = os.getenv("REDIS_PORT")
 
 # Create your views here.
 @require_http_methods(["GET"])
@@ -18,7 +19,7 @@ def index(request):
 @require_http_methods(["GET"])
 @async_to_sync
 async def search_name(request):
-   redis = await aioredis.create_redis(redis_host, 16872, password=redis_password)
+   redis = await aioredis.create_redis((redis_host, redis_port), password=redis_password)
    query = request.GET['query']
    results = await redis.scan(0, match= '*' + query + '*', count=1000)
    _, results = results
@@ -29,7 +30,7 @@ async def search_name(request):
 @require_http_methods(["GET"])
 @async_to_sync
 async def search(request):
-   redis = await aioredis.create_redis(redis_host, 16872, password=redis_password)
+   redis = await aioredis.create_redis((redis_host, redis_port), password=redis_password)
    name = request.GET['query']
    length = await redis.llen(name)
    indices = await redis.lrange(name, 0, length)
