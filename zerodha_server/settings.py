@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-# import django_heroku
+import django_heroku
 
 load_dotenv()
 
@@ -139,4 +139,4 @@ CRONJOBS = [
     ('30 23 * * *', 'bhavcopy.cron.fetch_bhavcopy')
 ]
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
