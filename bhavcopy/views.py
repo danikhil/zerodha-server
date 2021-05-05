@@ -6,9 +6,9 @@ import aioredis
 import json
 import os
 
-redis_host = os.environ("REDIS_HOST")
-redis_username = os.environ("REDIS_USERNAME")
-redis_password = os.environ("REDIS_PASSWORD")
+redis_host = os.getenv("REDIS_HOST")
+redis_username = os.getenv("REDIS_USERNAME")
+redis_password = os.getenv("REDIS_PASSWORD")
 
 # Create your views here.
 @require_http_methods(["GET"])

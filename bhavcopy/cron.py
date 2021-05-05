@@ -9,9 +9,9 @@ import csv
 from itertools import chain
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
-redis_host = os.environ("REDIS_HOST")
-redis_username = os.environ("REDIS_USERNAME")
-redis_password = os.environ("REDIS_PASSWORD")
+redis_host = os.getenv("REDIS_HOST")
+redis_username = os.getenv("REDIS_USERNAME")
+redis_password = os.getenv("REDIS_PASSWORD")
 
 #key is name in record and value is index
 async def store_in_db(key, value, redis):
