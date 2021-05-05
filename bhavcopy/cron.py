@@ -14,11 +14,11 @@ redis_username = os.environ("REDIS_USERNAME")
 redis_password = os.environ("REDIS_PASSWORD")
 
 #key is name in record and value is index
-async def store_in_db0(key, value, redis):
+async def store_in_db(key, value, redis):
    await redis.lpush(key.strip(), value.strip())
 
 #key is sc_code
-async def store_in_db1(key, columns, record, redis):
+async def store_in_db(key, columns, record, redis):
    pairs = list(chain.from_iterable([columns[i].strip(), record[i].strip()] for i in range(len(record))))
    await redis.hmset(key.strip(), *pairs)
 
@@ -32,8 +32,8 @@ async def read_files_and_store(directory: str):
          if(columns == None):
             continue
          for row in reader:
-            await store_in_db0(row[1], row[0], redis)
-            await store_in_db1(row[0], columns, row, redis)
+            await store_in_db(row[1], row[0], redis)
+            await store_in_db(row[0], columns, row, redis)
    redis.close()
    await redis.wait_closed()
 
