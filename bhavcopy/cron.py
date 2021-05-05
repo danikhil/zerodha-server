@@ -9,6 +9,9 @@ import csv
 from itertools import chain
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
+redis_host = os.environ("REDIS_HOST")
+redis_username = os.environ("REDIS_USERNAME")
+redis_password = os.environ("REDIS_PASSWORD")
 
 #key is name in record and value is index
 async def store_in_db0(key, value, redis):
@@ -21,8 +24,7 @@ async def store_in_db1(key, columns, record, redis):
 
 async def read_files_and_store(directory: str):
    files = os.listdir(directory)
-   redis0 = await aioredis.create_redis("redis://localhost", db=0)
-   redis1 = await aioredis.create_redis("redis://localhost", db=1)
+   redis = await aioredis.create_redis(redis_host, username = redis_username, password=redis_password)
    for file in files:
       with open(os.path.join(directory, file), newline='\n') as csvfile:
          reader = csv.reader(csvfile)
@@ -30,12 +32,10 @@ async def read_files_and_store(directory: str):
          if(columns == None):
             continue
          for row in reader:
-            await store_in_db0(row[1], row[0], redis0)
-            await store_in_db1(row[0], columns, row, redis1)
-   redis1.close()
-   redis0.close()
-   await redis0.wait_closed()
-   await redis1.wait_closed()
+            await store_in_db0(row[1], row[0], redis)
+            await store_in_db1(row[0], columns, row, redis)
+   redis.close()
+   await redis.wait_closed()
 
 
 def fetch_equity():

@@ -4,6 +4,11 @@ from asgiref.sync import async_to_sync
 
 import aioredis
 import json
+import os
+
+redis_host = os.environ("REDIS_HOST")
+redis_username = os.environ("REDIS_USERNAME")
+redis_password = os.environ("REDIS_PASSWORD")
 
 # Create your views here.
 @require_http_methods(["GET"])
@@ -13,7 +18,7 @@ def index(request):
 @require_http_methods(["GET"])
 @async_to_sync
 async def search_name(request):
-   redis = await aioredis.create_redis('redis://localhost', db=0)
+   redis = await aioredis.create_redis(redis_host, username=redis_username, password=redis_password)
    query = request.GET['query']
    results = await redis.scan(0, match= '*' + query + '*', count=1000)
    _, results = results
@@ -24,12 +29,11 @@ async def search_name(request):
 @require_http_methods(["GET"])
 @async_to_sync
 async def search(request):
-   redis = await aioredis.create_redis('redis://localhost', db=0)
+   redis = await aioredis.create_redis(redis_host, username=redis_username, password=redis_password)
    name = request.GET['query']
    length = await redis.llen(name)
    indices = await redis.lrange(name, 0, length)
    response = []
-   await redis.select(1)
    for index in indices:
       columns = ['SC_CODE', 'SC_NAME', 'OPEN', 'CLOSE', 'LOW', 'HIGH']
       result = await redis.hmget(index, *columns)
